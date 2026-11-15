@@ -1,7 +1,7 @@
 
 package cl.roberto.saucedemoqa;
 
-import org.openqa.selenium.By;
+import cl.roberto.saucedemoqa.pages.LoginPage;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -10,40 +10,77 @@ public class LoginTest extends BaseTest {
     @Test
     public void loginExitoso() {
 
-        driver.findElement(By.id("user-name"))
-                .sendKeys("standard_user");
+        LoginPage loginPage = new LoginPage(driver);
 
-        driver.findElement(By.id("password"))
-                .sendKeys("secret_sauce");
+        loginPage.ingresarUsuario("standard_user");
+        loginPage.ingresarPassword("secret_sauce");
+        loginPage.hacerClickLogin();
 
-        driver.findElement(By.id("login-button"))
-                .click();
-
-        String titulo = driver.findElement(
-                By.className("title")
-        ).getText();
-
-        Assert.assertEquals(titulo, "Products");
+        Assert.assertEquals(
+                loginPage.obtenerTituloPagina(),
+                "Products"
+        );
     }
 
     @Test
     public void loginUsuarioBloqueado() {
 
-        driver.findElement(By.id("user-name"))
-                .sendKeys("locked_out_user");
+        LoginPage loginPage = new LoginPage(driver);
 
-        driver.findElement(By.id("password"))
-                .sendKeys("secret_sauce");
-
-        driver.findElement(By.id("login-button"))
-                .click();
-
-        String mensaje = driver.findElement(
-                By.cssSelector("[data-test='error']")
-        ).getText();
+        loginPage.ingresarUsuario("locked_out_user");
+        loginPage.ingresarPassword("secret_sauce");
+        loginPage.hacerClickLogin();
 
         Assert.assertTrue(
-                mensaje.contains("Sorry, this user has been locked out")
+                loginPage.obtenerMensajeError().contains(
+                        "Sorry, this user has been locked out"
+                )
+        );
+    }
+
+    @Test
+    public void loginSinUsuario() {
+
+        LoginPage loginPage = new LoginPage(driver);
+
+        loginPage.ingresarPassword("secret_sauce");
+        loginPage.hacerClickLogin();
+
+        Assert.assertTrue(
+                loginPage.obtenerMensajeError().contains(
+                        "Username is required"
+                )
+        );
+    }
+
+    @Test
+    public void loginSinPassword() {
+
+        LoginPage loginPage = new LoginPage(driver);
+
+        loginPage.ingresarUsuario("standard_user");
+        loginPage.hacerClickLogin();
+
+        Assert.assertTrue(
+                loginPage.obtenerMensajeError().contains(
+                        "Password is required"
+                )
+        );
+    }
+
+    @Test
+    public void loginConCredencialesIncorrectas() {
+
+        LoginPage loginPage = new LoginPage(driver);
+
+        loginPage.ingresarUsuario("usuario_incorrecto");
+        loginPage.ingresarPassword("clave_incorrecta");
+        loginPage.hacerClickLogin();
+
+        Assert.assertTrue(
+                loginPage.obtenerMensajeError().contains(
+                        "Username and password do not match"
+                )
         );
     }
 }
