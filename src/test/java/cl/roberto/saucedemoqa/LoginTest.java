@@ -70,7 +70,10 @@ public class LoginTest extends BaseTest {
     }
 
     @Test(dataProvider = "credencialesIncorrectas")
-    public void loginConCredencialesIncorrectas(String usuario, String password) {
+    public void loginConCredencialesIncorrectas(
+            String usuario,
+            String password,
+            String mensajeEsperado) {
 
         LoginPage loginPage = new LoginPage(driver);
 
@@ -79,19 +82,28 @@ public class LoginTest extends BaseTest {
         loginPage.hacerClickLogin();
 
         Assert.assertTrue(
-                loginPage.obtenerMensajeError().contains(
-                        "Username and password do not match"
-                )
+                loginPage.obtenerMensajeError().contains(mensajeEsperado)
         );
     }
 
     @DataProvider(name = "credencialesIncorrectas")
     public Object[][] obtenerCredenciales() {
-
         return new Object[][]{
-                {"usuario_incorrecto", "clave_incorrecta"},
-                {"standard_user", "clave_incorrecta"},
-                {"usuario_incorrecto", "secret_sauce"}
+                {
+                        "usuario_incorrecto",
+                        "clave_incorrecta",
+                        "Username and password do not match"
+                },
+                {
+                        "standard_user",
+                        "clave_incorrecta",
+                        "Username and password do not match"
+                },
+                {
+                        "usuario_incorrecto",
+                        "secret_sauce",
+                        "Username and password do not match"
+                }
         };
     }
 }
