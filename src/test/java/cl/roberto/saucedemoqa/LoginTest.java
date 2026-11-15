@@ -4,6 +4,7 @@ package cl.roberto.saucedemoqa;
 import cl.roberto.saucedemoqa.pages.LoginPage;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.testng.annotations.DataProvider;
 
 public class LoginTest extends BaseTest {
 
@@ -68,13 +69,13 @@ public class LoginTest extends BaseTest {
         );
     }
 
-    @Test
-    public void loginConCredencialesIncorrectas() {
+    @Test(dataProvider = "credencialesIncorrectas")
+    public void loginConCredencialesIncorrectas(String usuario, String password) {
 
         LoginPage loginPage = new LoginPage(driver);
 
-        loginPage.ingresarUsuario("usuario_incorrecto");
-        loginPage.ingresarPassword("clave_incorrecta");
+        loginPage.ingresarUsuario(usuario);
+        loginPage.ingresarPassword(password);
         loginPage.hacerClickLogin();
 
         Assert.assertTrue(
@@ -82,5 +83,15 @@ public class LoginTest extends BaseTest {
                         "Username and password do not match"
                 )
         );
+    }
+
+    @DataProvider(name = "credencialesIncorrectas")
+    public Object[][] obtenerCredenciales() {
+
+        return new Object[][]{
+                {"usuario_incorrecto", "clave_incorrecta"},
+                {"standard_user", "clave_incorrecta"},
+                {"usuario_incorrecto", "secret_sauce"}
+        };
     }
 }

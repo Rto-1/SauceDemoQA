@@ -4,12 +4,15 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
 import java.time.Duration;
+
 import org.openqa.selenium.WebElement;
 
 public class LoginPage {
 
     private WebDriver driver;
+    private WebDriverWait wait;
 
     private By campoUsuario = By.id("user-name");
     private By campoPassword = By.id("password");
@@ -18,6 +21,7 @@ public class LoginPage {
     // Constructor
     public LoginPage(WebDriver driver) {
         this.driver = driver;
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
     // Acciones de la página
@@ -34,12 +38,10 @@ public class LoginPage {
     }
 
     public String obtenerTituloPagina() {
-
         return esperarElementoVisible(By.className("title")).getText();
     }
 
     public String obtenerMensajeError() {
-
         By mensajeError = By.cssSelector("[data-test='error']");
 
         return esperarElementoVisible(mensajeError).getText();
@@ -47,14 +49,10 @@ public class LoginPage {
 
     private WebElement esperarElementoVisible(By elemento) {
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
         return wait.until(ExpectedConditions.visibilityOfElementLocated(elemento));
     }
 
     private WebElement esperarElementoClickeable(By elemento) {
-
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
         return wait.until(ExpectedConditions.elementToBeClickable(elemento));
     }
