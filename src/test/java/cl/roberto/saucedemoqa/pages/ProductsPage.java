@@ -17,6 +17,7 @@ public class ProductsPage {
     private By titulo = By.className("title");
     private By productos = By.className("inventory_item");
     private By contadorCarrito = By.className("shopping_cart_badge");
+    private By enlaceCarrito = By.className("shopping_cart_link");
 
     // Constructor
     public ProductsPage(WebDriver driver) {
@@ -52,6 +53,11 @@ public class ProductsPage {
         }
 
         return Integer.parseInt(contador.get(0).getText());
+    }
+
+    public CartPage irAlCarrito() {
+        esperarElementoClickeable(enlaceCarrito).click();
+        return new CartPage(driver);
     }
 
     // Métodos privados de apoyo
