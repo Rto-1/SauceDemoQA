@@ -5,6 +5,11 @@ import cl.roberto.saucedemoqa.pages.LoginPage;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.annotations.DataProvider;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginTest extends BaseTest {
 
@@ -86,24 +91,48 @@ public class LoginTest extends BaseTest {
         );
     }
 
-    @DataProvider(name = "credencialesIncorrectas")
-    public Object[][] obtenerCredenciales() {
-        return new Object[][]{
-                {
-                        "usuario_incorrecto",
-                        "clave_incorrecta",
-                        "Username and password do not match"
-                },
-                {
-                        "standard_user",
-                        "clave_incorrecta",
-                        "Username and password do not match"
-                },
-                {
-                        "usuario_incorrecto",
-                        "secret_sauce",
-                        "Username and password do not match"
+
+    public Object[][] leerCSV() throws IOException {
+
+        List<Object[]> datos = new ArrayList<>();
+
+        String ruta = "src/test/resources/credenciales.csv";
+
+        try (BufferedReader br = new BufferedReader(new FileReader(ruta))) {
+
+            String linea;
+
+            // Saltamos los encabezados
+            br.readLine();
+
+            while ((linea = br.readLine()) != null) {
+
+                // Ignoramos líneas vacías
+                if (linea.trim().isEmpty()) {
+                    continue;
                 }
-        };
+
+                String[] columnas = linea.split(",", 3);
+
+                // Verificamos que existan las 3 columnas
+                if (columnas.length != 3) {
+                    throw new IOException("Fila CSV incorrecta: " + linea);
+                }
+
+                datos.add(new Object[]{
+                        columnas[0].trim(),
+                        columnas[1].trim(),
+                        columnas[2].trim()
+                });
+            }
+        }
+
+        return datos.toArray(new Object[0][]);
+    }
+
+
+    @DataProvider(name = "credencialesIncorrectas")
+    public Object[][] obtenerCredenciales() throws IOException {
+        return leerCSV();
     }
 }

@@ -1,0 +1,5 @@
+usuario,password,mensajeEsperado
+usuario_incorrecto,clave_incorrecta,Username and password do not match
+standard_user,clave_incorrecta,Username and password do not match
+usuario_incorrecto,secret_sauce,Username and password do not match
+STANDARD_USER,secret_sauce,Username and password do not match
