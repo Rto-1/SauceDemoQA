@@ -13,7 +13,7 @@ import java.util.List;
 
 public class LoginTest extends BaseTest {
 
-    @Test
+    @Test(description = "Validar inicio de sesión exitoso con credenciales válidas")
     public void loginExitoso() {
 
         LoginPage loginPage = new LoginPage(driver);
@@ -28,7 +28,7 @@ public class LoginTest extends BaseTest {
         );
     }
 
-    @Test
+    @Test(description = "Validar que un usuario bloqueado no pueda iniciar sesión")
     public void loginUsuarioBloqueado() {
 
         LoginPage loginPage = new LoginPage(driver);
@@ -44,7 +44,7 @@ public class LoginTest extends BaseTest {
         );
     }
 
-    @Test
+    @Test(description = "Validar inicio de sesión sin ingresar nombre de usuario")
     public void loginSinUsuario() {
 
         LoginPage loginPage = new LoginPage(driver);
@@ -59,7 +59,7 @@ public class LoginTest extends BaseTest {
         );
     }
 
-    @Test
+    @Test(description = "Validar inicio de sesión sin ingresar contraseña")
     public void loginSinPassword() {
 
         LoginPage loginPage = new LoginPage(driver);
