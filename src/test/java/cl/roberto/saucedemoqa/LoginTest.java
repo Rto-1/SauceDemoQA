@@ -25,7 +25,8 @@ public class LoginTest extends BaseTest {
 
         Assert.assertEquals(
                 loginPage.obtenerTituloPagina(),
-                "Products"
+                "Products",
+                "El título de la página después del login no es el esperado"
         );
     }
 
@@ -39,9 +40,8 @@ public class LoginTest extends BaseTest {
         loginPage.hacerClickLogin();
 
         Assert.assertTrue(
-                loginPage.obtenerMensajeError().contains(
-                        "Sorry, this user has been locked out"
-                )
+                loginPage.obtenerMensajeError().contains("Sorry, this user has been locked out"),
+                "No apareció el mensaje de usuario bloqueado"
         );
     }
 
@@ -54,9 +54,8 @@ public class LoginTest extends BaseTest {
         loginPage.hacerClickLogin();
 
         Assert.assertTrue(
-                loginPage.obtenerMensajeError().contains(
-                        "Username is required"
-                )
+                loginPage.obtenerMensajeError().contains("Username is required"),
+                "No apareció el mensaje de error 'Username is required'"
         );
     }
 
@@ -69,13 +68,13 @@ public class LoginTest extends BaseTest {
         loginPage.hacerClickLogin();
 
         Assert.assertTrue(
-                loginPage.obtenerMensajeError().contains(
-                        "Password is required"
-                )
+                loginPage.obtenerMensajeError().contains("Password is required"),
+                "No apareció el mensaje de error 'Password is required'"
         );
     }
 
-    @Test(dataProvider = "credencialesIncorrectas")
+    @Test(dataProvider = "credencialesIncorrectas",
+            description = "Validar mensaje de error con credenciales incorrectas (datos desde CSV)")
     public void loginConCredencialesIncorrectas(
             String usuario,
             String password,
@@ -88,7 +87,9 @@ public class LoginTest extends BaseTest {
         loginPage.hacerClickLogin();
 
         Assert.assertTrue(
-                loginPage.obtenerMensajeError().contains(mensajeEsperado)
+                loginPage.obtenerMensajeError().contains(mensajeEsperado),
+                "Con usuario '" + usuario + "' y password '" + password
+                        + "' no apareció el mensaje: " + mensajeEsperado
         );
     }
 
