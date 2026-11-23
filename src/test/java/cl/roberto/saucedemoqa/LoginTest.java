@@ -1,4 +1,3 @@
-
 package cl.roberto.saucedemoqa;
 
 import cl.roberto.saucedemoqa.pages.LoginPage;
@@ -6,8 +5,10 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.annotations.DataProvider;
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,13 +93,20 @@ public class LoginTest extends BaseTest {
     }
 
 
-    public Object[][] leerCSV() throws IOException {
+    private Object[][] leerCSV() throws IOException {
 
         List<Object[]> datos = new ArrayList<>();
 
-        String ruta = "src/test/resources/credenciales.csv";
+        InputStream archivo = getClass()
+                .getClassLoader()
+                .getResourceAsStream("credenciales.csv");
 
-        try (BufferedReader br = new BufferedReader(new FileReader(ruta))) {
+        if (archivo == null) {
+            throw new IOException("No se encontró credenciales.csv en resources");
+        }
+
+        try (BufferedReader br = new BufferedReader(
+                new InputStreamReader(archivo, StandardCharsets.UTF_8))) {
 
             String linea;
 
