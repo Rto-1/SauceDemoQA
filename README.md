@@ -28,6 +28,14 @@ aplicando el patrón Page Object Model (POM) y pruebas basadas en datos externos
 | TC004 | Inicio de sesión sin contraseña | PASS |
 | TC005 - TC008 | Credenciales incorrectas (4 combinaciones leídas desde CSV) | PASS |
 
+## Reporte de pruebas
+
+Al ejecutar `mvn test` se genera un reporte HTML con Extent Reports en
+`target/reportes/reporte.html`. Cuando una prueba falla, el reporte incluye
+el detalle del error y una captura de pantalla del momento del fallo.
+
+![Reporte Extent con captura de error](docs/imagenes/reporte-extent.png)
+
 ## Cómo ejecutar las pruebas
 
 ```
