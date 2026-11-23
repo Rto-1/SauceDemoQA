@@ -1,6 +1,7 @@
 package cl.roberto.saucedemoqa.pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -19,6 +20,7 @@ public class CartPage {
     private By productosEnCarrito = By.className("cart_item");
     private By nombreProducto = By.className("inventory_item_name");
     private By precioProducto = By.className("inventory_item_price");
+    private By botonCheckout = By.id("checkout");
 
     // Constructor
     public CartPage(WebDriver driver) {
@@ -32,26 +34,36 @@ public class CartPage {
     }
 
     public int obtenerCantidadProductos() {
-        return driver.findElements(productosEnCarrito).size();
+        return obtenerTextos(productosEnCarrito).size();
     }
 
     public List<String> obtenerNombresProductos() {
-        List<String> nombres = new ArrayList<>();
-
-        for (WebElement elemento : driver.findElements(nombreProducto)) {
-            nombres.add(elemento.getText());
-        }
-
-        return nombres;
+        return obtenerTextos(nombreProducto);
     }
 
     public List<String> obtenerPreciosProductos() {
-        List<String> precios = new ArrayList<>();
+        return obtenerTextos(precioProducto);
+    }
 
-        for (WebElement elemento : driver.findElements(precioProducto)) {
-            precios.add(elemento.getText());
-        }
+    public CheckoutPage irACheckout() {
+        wait.until(ExpectedConditions.elementToBeClickable(botonCheckout)).click();
+        return new CheckoutPage(driver);
+    }
 
-        return precios;
+    // Método privado de apoyo: lee el texto de todos los elementos que coinciden
+    // y reintenta si la página se redibuja mientras los leemos
+    private List<String> obtenerTextos(By localizador) {
+
+        return wait.ignoring(StaleElementReferenceException.class).until(d -> {
+
+            List<String> textos = new ArrayList<>();
+
+            for (WebElement elemento : d.findElements(localizador)) {
+                textos.add(elemento.getText());
+            }
+
+            // Si todavía no hay elementos, devolvemos null y la espera lo vuelve a intentar
+            return textos.isEmpty() ? null : textos;
+        });
     }
 }
